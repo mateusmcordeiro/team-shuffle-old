@@ -1,4 +1,10 @@
-# team-shuffle
+# Team shuffle web-app
+
+## Github-Pages
+https://mateusmcordeiro.github.io/team-shuffle/
+
+## Description
+With this web app you can define two Team Leaders, a number of players total players and its players nicks and it will be generated two teams shuffled.
 
 ## Project setup
 ```
