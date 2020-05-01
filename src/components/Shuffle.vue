@@ -55,15 +55,15 @@
               </div>
           </div>
           <div class="buttons">
-              <button v-on:click="prevStep" v-if="step > 0">
-                  <arrow-left-icon size="100" class="button-icon"></arrow-left-icon>
+              <button v-on:click="prevStep" v-if="step > 0" class="button-icon prev">
+                  <arrow-left-icon size="100"></arrow-left-icon>
               </button>
-              <button v-on:click="shuffleTeams" v-if="step === 4">
-                  <refresh-ccw-icon size="100" class="button-icon"></refresh-ccw-icon>
+              <button v-on:click="timeOuttedShuffle" :class="[ 'button-icon','re-shuffle', reShufledClass ]" v-if="step === 4">
+                  <refresh-ccw-icon size="100"></refresh-ccw-icon>
               </button>
-              <button v-on:click="nextStep" v-if="step < 4">
+              <button v-on:click="nextStep" v-if="step < 4" :class="['button-icon', step > 0 ? 'next' : '']">
                   {{step === 0 ? 'Start application' : ''}}
-                  <arrow-right-icon size="100" class="button-icon" v-if="step > 0"></arrow-right-icon>
+                  <arrow-right-icon size="100" v-if="step > 0"></arrow-right-icon>
 
               </button>
           </div>
@@ -85,17 +85,18 @@ export default {
     },
     data() {
     return{
-        teamLeaders: [
-        '', ''
-        ],
-        leadersShuffled:[],
-        players: [
+            teamLeaders: [
+            '', ''
+            ],
+            leadersShuffled:[],
+            players: [
 
-        ],
-        playersShuffled: [],
-        playersQuantity: 0,
-        spliceIndex: 0,
-        step: 0
+            ],
+            playersShuffled: [],
+            playersQuantity: 0,
+            spliceIndex: 0,
+            step: 0,
+            reshuffle: false
         }
     },
     computed: {
@@ -114,6 +115,9 @@ export default {
         calcStep3FormGroupHeight() {
             const height = 331.563;
             return height/this.playersQuantity;
+        },
+        reShufledClass() {
+            return this.reshuffle ? 'clicked' : '';
         }
     },
     methods: {
@@ -139,9 +143,18 @@ export default {
           }
         },
         shuffleTeams() {
-          this.shuffleLeaders();
-          this.generateSpliceIndex();
-          this.playersShuffled = _.shuffle(this.players);
+
+            this.shuffleLeaders();
+            this.generateSpliceIndex();
+            this.playersShuffled = _.shuffle(this.players);
+
+        },
+        timeOuttedShuffle() {
+            this.reshuffle = true;
+            setTimeout(() => this.reshuffle = false,500);
+            this.shuffleTeams();
+
+
         },
         random() {
           return Math.floor( Math.random() * 10) < 5 ? 0 : 1;
@@ -303,7 +316,7 @@ export default {
             z-index: 300;
         }
         input {
-            height: fill-available;
+            height: stretch;
             border: none;
             border-radius: 0;
             transition: border .5s ease-in-out;
@@ -369,9 +382,23 @@ export default {
         font-size: 32px;
     }
     .button-icon {
+
         color: #e63946;
+        transition: all .5s ease-in-out;
         &:hover,&:focus {
             color: #d62828;
+        }
+        &.next:hover {
+            margin-left: 30px;
+        }
+        &.prev:hover {
+            margin-right: 30px;
+        }
+        &.re-shuffle:hover {
+            transform: rotate(-30deg);
+        }
+        &.re-shuffle.clicked {
+            transform: rotate(-330deg);
         }
     }
 </style>
